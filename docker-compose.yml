@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: skillsync-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: skillsync
+      POSTGRES_PASSWORD: skillsync_secret
+      POSTGRES_DB: skillsync
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skillsync -d skillsync"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: skillsync-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+psycopg://skillsync:skillsync_secret@db:5432/skillsync
+      - SECRET_KEY=prod-secret-key-change-in-production-skillsync-2026
+      - ENVIRONMENT=prod
+      - PORT=8000
+      - AUTO_MIGRATE=true
+      - CORS_ORIGINS=*
+      - MODEL_PATH=ml/artifacts/model.joblib
+      - MODEL_STORAGE=local
+      - LOG_LEVEL=INFO
+    volumes:
+      - ml_artifacts:/app/ml/artifacts
+
+volumes:
+  postgres_data:
+  ml_artifacts:

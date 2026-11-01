@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillSync LMS — Adaptive Learning Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- ── Top Navigation ────────────────────────────────────────────────── -->
+  <nav id="navbar" class="navbar">
+    <div class="nav-container">
+      <a class="brand" href="#login">
+        🎓 SkillSync LMS
+        <span class="badge">Adaptive</span>
+      </a>
+
+      <!-- Logged-out links -->
+      <div id="nav-logged-out" class="nav-links">
+        <a class="nav-link" data-nav="login">Sign In</a>
+        <a class="nav-link" data-nav="register">Register</a>
+      </div>
+
+      <!-- Logged-in links -->
+      <div id="nav-logged-in" class="nav-links" style="display:none;">
+        <a class="nav-link" data-nav="student-dashboard" data-role="student">My Dashboard</a>
+        <a class="nav-link" data-nav="teacher-dashboard" data-role="teacher">Teacher Dashboard</a>
+        <a class="nav-link" data-nav="admin-dashboard" data-role="admin">Admin Console</a>
+        <a class="nav-link" data-nav="courses-list" data-role="student,teacher,admin">Courses</a>
+
+        <div id="user-badge" class="user-badge">
+          <span id="user-badge-text">User</span>
+        </div>
+
+        <button id="btn-logout" class="btn btn-secondary btn-sm">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Main Content Container ────────────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- ===================================================================
+         1. LOGIN VIEW
+         =================================================================== -->
+    <section class="view-section" data-view="login">
+      <div style="max-width: 440px; margin: 2rem auto;">
+        <div class="card">
+          <h2 class="card-title" style="font-size: 1.5rem; margin-bottom: 0.5rem;">Sign In</h2>
+          <p class="card-desc">Access your personalized learning portal</p>
+
+          <form id="login-form">
+            <div class="form-group">
+              <label class="form-label" for="login-email">Email Address</label>
+              <input type="email" id="login-email" class="form-control" placeholder="user@skillsync.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="login-password">Password</label>
+              <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <button type="submit" id="login-submit-btn" class="btn btn-primary" style="width: 100%;">Sign In</button>
+          </form>
+
+          <div style="text-align: center; margin-top: 1rem; font-size: 0.875rem;">
+            Don't have an account? <a href="#register" id="to-register-btn" style="color: var(--primary); font-weight: 600;">Register</a>
+          </div>
+
+          <!-- Quick Login Demo Accounts Ribbon -->
+          <div class="demo-accounts-box">
+            <strong>🚀 One-Click Demo Accounts:</strong>
+            <div class="demo-buttons">
+              <button class="btn btn-secondary btn-sm" data-demo-user="student">Student</button>
+              <button class="btn btn-secondary btn-sm" data-demo-user="teacher">Teacher</button>
+              <button class="btn btn-secondary btn-sm" data-demo-user="admin">Admin</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         2. REGISTER VIEW
+         =================================================================== -->
+    <section class="view-section" data-view="register">
+      <div style="max-width: 440px; margin: 2rem auto;">
+        <div class="card">
+          <h2 class="card-title" style="font-size: 1.5rem; margin-bottom: 0.5rem;">Create Account</h2>
+          <p class="card-desc">Join SkillSync LMS today</p>
+
+          <form id="register-form">
+            <div class="form-group">
+              <label class="form-label" for="reg-name">Full Name</label>
+              <input type="text" id="reg-name" class="form-control" placeholder="Jane Doe" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-email">Email Address</label>
+              <input type="email" id="reg-email" class="form-control" placeholder="jane@example.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-password">Password</label>
+              <input type="password" id="reg-password" class="form-control" placeholder="Minimum 6 characters" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-role">Role</label>
+              <select id="reg-role" class="form-control">
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+              </select>
+            </div>
+            <button type="submit" id="reg-submit-btn" class="btn btn-primary" style="width: 100%;">Create Account</button>
+          </form>
+
+          <div style="text-align: center; margin-top: 1rem; font-size: 0.875rem;">
+            Already have an account? <a href="#login" id="to-login-btn" style="color: var(--primary); font-weight: 600;">Sign In</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         3. STUDENT DASHBOARD VIEW
+         =================================================================== -->
+    <section class="view-section" data-view="student-dashboard">
+      <!-- Course Selector -->
+      <div id="student-course-select-wrap" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1 style="font-size: 1.75rem; font-weight: 700;">Student Portal</h1>
+          <p class="text-muted">Personalized learning insights, mastery & recommendations</p>
+        </div>
+        <div style="display:flex; align-items:center; gap: 0.5rem;">
+          <label for="student-course-select" style="font-size:0.875rem; font-weight:600;">Active Course:</label>
+          <select id="student-course-select" class="form-control" style="width: auto; min-width: 220px;"></select>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="grid-4" style="margin-bottom: 2rem;">
+        <div class="card stat-card">
+          <div class="stat-icon">🔥</div>
+          <div>
+            <div class="stat-value" id="stat-streak">0 days</div>
+            <div class="stat-label">Learning Streak</div>
+          </div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon">⏱️</div>
+          <div>
+            <div class="stat-value" id="stat-time">0 min</div>
+            <div class="stat-label">Total Time Spent</div>
+          </div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon">📚</div>
+          <div>
+            <div class="stat-value" id="stat-lessons">0 / 0</div>
+            <div class="stat-label">Lessons Completed</div>
+          </div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon">🎯</div>
+          <div>
+            <div class="stat-value" id="stat-mastery">0%</div>
+            <div class="stat-label">Average Mastery</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ML Prediction Banner -->
+      <div id="student-prediction-banner" class="prediction-banner" style="display: none;">
+        <div style="flex: 1; min-width: 260px;">
+          <div style="display:flex; align-items:center; gap: 0.75rem;">
+            <h2>Predicted Final Score: <span id="pred-score-value">—</span></h2>
+            <span id="pred-risk-badge" class="badge">Low Risk</span>
+          </div>
+          <p id="pred-banner-desc" style="font-size: 0.875rem; opacity: 0.9; margin-top: 0.25rem;">
+            Calculated by the GradientBoostingRegressor model based on your study habits and mastery level.
+          </p>
+          <div class="prediction-factors" id="pred-factors">
+            <!-- Dynamic factors -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Charts (Radar + Trend) -->
+      <div class="grid-2" style="margin-bottom: 2rem;">
+        <div class="card">
+          <h3 class="card-title">Topic Mastery Radar</h3>
+          <p class="card-desc">Your decay-adjusted retention level across topics</p>
+          <div style="position: relative; height: 280px;">
+            <canvas id="chart-student-radar"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Quiz Performance Trend</h3>
+          <p class="card-desc">Historical quiz score trajectory over time</p>
+          <div style="position: relative; height: 280px;">
+            <canvas id="chart-student-trend"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Smart Recommendations List -->
+      <div class="card" style="margin-bottom: 2rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
+          <div>
+            <h3 class="card-title" style="margin-bottom: 0.25rem;">Recommended Next Steps</h3>
+            <p class="card-desc" style="margin-bottom: 0;">Hybrid recommendation engine suggestions based on your weak spots and peer success patterns</p>
+          </div>
+        </div>
+        <div id="student-recommendations-list">
+          <p class="text-muted">Loading recommendations...</p>
+        </div>
+      </div>
+
+      <!-- Enrolled Courses -->
+      <div>
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">My Courses</h3>
+        <div id="student-courses-grid" class="grid-3"></div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         4. TEACHER DASHBOARD VIEW
+         =================================================================== -->
+    <section class="view-section" data-view="teacher-dashboard">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1 style="font-size: 1.75rem; font-weight: 700;">Instructor Portal</h1>
+          <p class="text-muted">Cohort learning analytics, early risk detection & interventions</p>
+        </div>
+        <div style="display:flex; align-items:center; gap: 0.5rem;">
+          <label for="teacher-course-select" style="font-size:0.875rem; font-weight:600;">Course Cohort:</label>
+          <select id="teacher-course-select" class="form-control" style="width: auto; min-width: 240px;"></select>
+        </div>
+      </div>
+
+      <div id="teacher-empty-state" class="card" style="display: none; text-align: center; padding: 3rem;">
+        <p class="card-desc">No courses found. Create courses to start tracking student progress.</p>
+      </div>
+
+      <div id="teacher-dashboard-content">
+        <!-- Stat Cards -->
+        <div class="grid-2" style="margin-bottom: 2rem;">
+          <div class="card stat-card">
+            <div class="stat-icon">👥</div>
+            <div>
+              <div class="stat-value" id="t-stat-enrolled">0</div>
+              <div class="stat-label">Total Enrolled Students</div>
+            </div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon">📈</div>
+            <div>
+              <div class="stat-value" id="t-stat-completion">0%</div>
+              <div class="stat-label">Cohort Completion Rate</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Grid (Topic Mastery + Score Dist + Engagement) -->
+        <div class="grid-3" style="margin-bottom: 2rem;">
+          <div class="card">
+            <h3 class="card-title">Topic Mastery Levels</h3>
+            <p class="card-desc">Average cohort mastery by curriculum topic</p>
+            <div style="position: relative; height: 260px;">
+              <canvas id="chart-teacher-topic-mastery"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <h3 class="card-title">Score Distribution</h3>
+            <p class="card-desc">Student quiz performance across grade bands</p>
+            <div style="position: relative; height: 260px;">
+              <canvas id="chart-teacher-score-dist"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <h3 class="card-title">Engagement Activity</h3>
+            <p class="card-desc">Daily active student counts over time</p>
+            <div style="position: relative; height: 260px;">
+              <canvas id="chart-teacher-engagement"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- At-Risk Early Warning Table -->
+        <div class="card">
+          <div style="margin-bottom: 1rem;">
+            <h3 class="card-title" style="color: var(--danger);">⚠️ At-Risk Student Early Warning System</h3>
+            <p class="card-desc">Students predicted to fail or drop out, prioritized for proactive teacher intervention</p>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Risk Level</th>
+                  <th>Predicted Grade</th>
+                  <th>Key Driving Factors</th>
+                  <th>Suggested Intervention</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="teacher-at-risk-tbody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         5. ADMIN DASHBOARD VIEW
+         =================================================================== -->
+    <section class="view-section" data-view="admin-dashboard">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1 style="font-size: 1.75rem; font-weight: 700;">Admin Console</h1>
+          <p class="text-muted">Platform management, user administration & ML pipeline controls</p>
+        </div>
+        <button id="btn-admin-retrain" class="btn btn-primary">Retrain Prediction Model</button>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="grid-3" style="margin-bottom: 2rem;">
+        <div class="card stat-card">
+          <div class="stat-icon">👥</div>
+          <div>
+            <div class="stat-value" id="admin-total-users">0</div>
+            <div class="stat-label">Total Users</div>
+          </div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon">🎓</div>
+          <div>
+            <div class="stat-value" id="admin-total-students">0</div>
+            <div class="stat-label">Students</div>
+          </div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon">👨‍🏫</div>
+          <div>
+            <div class="stat-value" id="admin-total-teachers">0</div>
+            <div class="stat-label">Teachers</div>
+          </div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon">📖</div>
+          <div>
+            <div class="stat-value" id="admin-total-courses">0</div>
+            <div class="stat-label">Courses</div>
+          </div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon">📝</div>
+          <div>
+            <div class="stat-value" id="admin-total-enrollments">0</div>
+            <div class="stat-label">Enrollments</div>
+          </div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon">📊</div>
+          <div>
+            <div class="stat-value" id="admin-total-attempts">0</div>
+            <div class="stat-label">Quiz Attempts</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Management Table -->
+      <div class="card">
+        <h3 class="card-title" style="margin-bottom: 1rem;">Platform Users</h3>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Joined</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-users-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         6. COURSES DIRECTORY VIEW
+         =================================================================== -->
+    <section class="view-section" data-view="courses-list">
+      <div style="margin-bottom: 1.5rem;">
+        <h1 style="font-size: 1.75rem; font-weight: 700;">Explore Courses</h1>
+        <p class="text-muted">Browse all available learning curriculums</p>
+      </div>
+      <div id="all-courses-grid" class="grid-3"></div>
+    </section>
+
+    <!-- ===================================================================
+         7. COURSE DETAIL VIEW
+         =================================================================== -->
+    <section class="view-section" data-view="course">
+      <div class="card" style="margin-bottom: 2rem;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+          <div>
+            <h1 id="course-detail-title" style="font-size: 1.75rem; font-weight: 700;">Course</h1>
+            <p id="course-detail-desc" class="card-desc" style="margin-top: 0.5rem; font-size: 1rem;"></p>
+          </div>
+          <button id="btn-course-enroll" class="btn btn-primary">Enroll in Course</button>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Curriculum Modules</h3>
+          <div id="course-modules-list"></div>
+        </div>
+        <div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Course Quizzes</h3>
+          <div id="course-quizzes-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         8. LESSON VIEW
+         =================================================================== -->
+    <section class="view-section" data-view="lesson">
+      <div style="max-width: 800px; margin: 0 auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
+          <div>
+            <span id="lesson-topic" class="badge badge-info" style="margin-bottom: 0.5rem;">Topic</span>
+            <h1 id="lesson-title" style="font-size: 1.75rem; font-weight: 700;">Lesson Title</h1>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size: 0.75rem; color:var(--text-muted);">Study Time</div>
+            <strong id="lesson-timer-display" style="font-size: 1.125rem;">0s</strong>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div id="lesson-content" style="font-size: 1.05rem; line-height: 1.75; min-height: 200px;">
+            <!-- Content -->
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <button class="btn btn-secondary" onclick="window.history.back()">Back</button>
+          <button id="btn-complete-lesson" class="btn btn-success">Mark as Completed</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         9. ADAPTIVE QUIZ VIEW
+         =================================================================== -->
+    <section class="view-section" data-view="quiz">
+      <div class="quiz-container">
+
+        <!-- Intro Box -->
+        <div id="quiz-intro-box" class="card" style="text-align:center; padding: 3rem 2rem;">
+          <h1 id="quiz-view-title" style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem;">Adaptive Quiz</h1>
+          <p class="card-desc" style="max-width: 480px; margin: 0 auto 1.5rem auto;">
+            This quiz uses an adaptive difficulty algorithm. Questions adjust in real-time based on your responses, updating your topic mastery with retention decay.
+          </p>
+          <button id="btn-start-quiz" class="btn btn-primary" style="padding: 0.75rem 2rem; font-size: 1rem;">Start Quiz</button>
+        </div>
+
+        <!-- Question Container -->
+        <div id="quiz-question-container" style="display:none;">
+          <div class="quiz-header">
+            <div>
+              <span id="quiz-question-number" style="font-weight: 700; font-size: 0.875rem; color: var(--text-muted);">Question 1 of 5</span>
+              <span id="quiz-question-topic" class="badge badge-info" style="margin-left: 0.5rem;"></span>
+            </div>
+            <div id="quiz-question-diff"></div>
+          </div>
+
+          <div class="progress-bar-container">
+            <div id="quiz-progress-bar" class="progress-bar" style="width: 0%;"></div>
+          </div>
+
+          <div class="quiz-question-box">
+            <h3 id="quiz-question-text" style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem;"></h3>
+            <div id="quiz-options-list"></div>
+
+            <div id="quiz-feedback-box" style="display:none;"></div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+              <button id="btn-submit-answer" class="btn btn-primary" disabled>Submit Answer</button>
+              <button id="btn-next-question" class="btn btn-success" style="display:none;">Next Question ➔</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Box -->
+        <div id="quiz-results-box" class="card" style="display:none; text-align:center; padding: 3rem 2rem;">
+          <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
+          <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem;">Quiz Completed!</h2>
+          <p class="card-desc">Here is a summary of your performance:</p>
+
+          <div style="display:flex; justify-content:center; gap: 2rem; margin: 2rem 0;">
+            <div>
+              <div class="stat-value" id="quiz-final-score" style="color: var(--primary);">0%</div>
+              <div class="stat-label">Final Score</div>
+            </div>
+            <div>
+              <div class="stat-value" id="quiz-final-duration">0 min</div>
+              <div class="stat-label">Time Taken</div>
+            </div>
+          </div>
+
+          <button id="btn-quiz-return-dashboard" class="btn btn-primary">Return to Dashboard</button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ────────────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div><strong>SkillSync LMS</strong> — Adaptive Learning Platform v1.0.0</div>
+      <div>Designed with Learning Analytics, ML Predictions & Intelligent Recommendations</div>
+    </div>
+  </footer>
+
+  <!-- ── Application Script (ES Module) ────────────────────────────────── -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
